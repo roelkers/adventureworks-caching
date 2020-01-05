@@ -1,0 +1,25 @@
+version: '3'
+services: 
+  postgres:
+    image: 'postgres:latest'
+    volumes:
+      - ./postgres/adventureworks:/initialdata
+  redis:
+    image: 'redis:latest'
+  api: 
+    build: 
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=adventureworks
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432 
+    ports: 
+      - "4001:5000"
